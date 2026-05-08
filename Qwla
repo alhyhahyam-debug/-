@@ -1,0 +1,30 @@
+from flask import Flask
+from threading import Thread
+import discord
+from discord.ext import commands
+
+# --- كود السيرفر لإبقاء البوت حياً ---
+app = Flask('')
+@app.route('/')
+def home():
+    return "I'm alive!"
+
+def run():
+    app.run(host='0.0.0.0', port=8080)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+# ----------------------------------
+
+intents = discord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix='!', intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user.name}')
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="24/7 Online"))
+
+keep_alive() # تشغيل السيرفر
+bot.run('MTUwMTUwNTUzNjk4NDYxMjkyNQ.GbS7Dx.90UKmAELxq9lIJnWMiLcTt4E_siP36u-l9BnX8') # ضع التوكن الجديد هنا
